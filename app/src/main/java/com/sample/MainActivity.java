@@ -16,8 +16,15 @@
 
 package com.sample;
 
+import android.Manifest;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -36,8 +43,11 @@ import com.downloader.Progress;
 import com.downloader.Status;
 import com.sample.utils.Utils;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_WRITE_PERMISSION = 87;
     private static String dirPath;
 
     final String URL1 = "http://www.appsapk.com/downloading/latest/Facebook-119.0.0.23.70.apk";
@@ -89,7 +99,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dirPath = Utils.getRootDirPath(getApplicationContext());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permissions, REQUEST_WRITE_PERMISSION);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && (!getPackageManager().canRequestPackageInstalls()) ) {
+            startActivityForResult(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).setData(Uri.parse(String.format("package:%s", getPackageName()))), 1234);
+        }
+
+        dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString(); //  /storage/emulated/0/Download
+//        dirPath = Environment.getExternalStorageDirectory().toString(); // /storage/emulated/0
+//        dirPath = Utils.getRootDirPath(getApplicationContext());
 
         init();
 
@@ -239,6 +260,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonOne.setEnabled(false);
                                 buttonCancelOne.setEnabled(false);
                                 buttonOne.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "facebook.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -325,6 +361,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonTwo.setEnabled(false);
                                 buttonCancelTwo.setEnabled(false);
                                 buttonTwo.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "wechat.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -411,6 +462,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonThree.setEnabled(false);
                                 buttonCancelThree.setEnabled(false);
                                 buttonThree.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "instagram.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -497,6 +563,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonFour.setEnabled(false);
                                 buttonCancelFour.setEnabled(false);
                                 buttonFour.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "flashlight.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -583,6 +664,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonFive.setEnabled(false);
                                 buttonCancelFive.setEnabled(false);
                                 buttonFive.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "screenrecorder.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -670,6 +766,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonSix.setEnabled(false);
                                 buttonCancelSix.setEnabled(false);
                                 buttonSix.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "callrecorder.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -757,6 +868,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonSeven.setEnabled(false);
                                 buttonCancelSeven.setEnabled(false);
                                 buttonSeven.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "soundprofile.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -844,6 +970,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonEight.setEnabled(false);
                                 buttonCancelEight.setEnabled(false);
                                 buttonEight.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "evernote.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -930,6 +1071,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonNine.setEnabled(false);
                                 buttonCancelNine.setEnabled(false);
                                 buttonNine.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "ucbrowser.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -1016,6 +1172,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonTen.setEnabled(false);
                                 buttonCancelTen.setEnabled(false);
                                 buttonTen.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "barcodescanner.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
@@ -1102,6 +1273,21 @@ public class MainActivity extends AppCompatActivity {
                                 buttonEleven.setEnabled(false);
                                 buttonCancelEleven.setEnabled(false);
                                 buttonEleven.setText(R.string.completed);
+
+                                File toInstall = new File(dirPath, "BigBuckBunny.apk");
+                                Intent intent;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Uri apkUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", toInstall);
+                                    intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                    intent.setData(apkUri);
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } else {
+                                    Uri apkUri = Uri.fromFile(toInstall);
+                                    intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                startActivity(intent);
                             }
 
                             @Override
